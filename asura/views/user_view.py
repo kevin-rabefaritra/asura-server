@@ -88,16 +88,16 @@ class UserUpdatePassword(APIView):
         """
         POST request to update a user's password
         :params request contains:
-        - old_password: old user password
-        - new_password: new user password
+        - oldPassword: old user password
+        - newPassword: new user password
         
         :note
         - user is identified by token authentication
         - password confirmation is performed on client side
         """
         # check that both parameters are provided
-        old_password = request.data.get('old_password')
-        new_password = request.data.get('new_password')
+        old_password = request.data.get('oldPassword')
+        new_password = request.data.get('newPassword')
         if old_password is not None and new_password is not None:
             try:
                 username = request.user.username
