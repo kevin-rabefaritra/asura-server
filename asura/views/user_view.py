@@ -13,6 +13,7 @@ from rest_framework import generics
 from rest_framework.views import APIView
 
 from asura.services import token_services, user_services
+from asura.models import Token
 
 
 class UserList(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
@@ -45,11 +46,13 @@ class UserSignIn(mixins.ListModelMixin, generics.GenericAPIView):
     def post(self, request, *args, **kwargs):
         user = user_services.find_by_username_password(request.data.get('username'), request.data.get('password'))
         if user is not None:
-            token = token_services.get(user, create_if_none=True)
+            access_token = token_services.get(user, type=Token.TokenType.ACCESS, create_if_none=True)
+            refresh_token = token_services.get(user, type=Token.TokenType.REFRESH, create_if_none=True)
             serializer = UserSerializer(user)
             response = {
                 'user': serializer.data,
-                'token': token.key
+                'token': access_token.key,
+                'refreshToken': refresh_token.key
             }
             return Response(data=response, status=status.HTTP_200_OK)
         else:

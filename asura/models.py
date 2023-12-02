@@ -82,12 +82,17 @@ class Token(models.Model):
     """
     The default authorization token model (used with Asura.User)
     """
-    key = models.CharField(_("Key"), max_length=40, primary_key=True)
+    class TokenType(models.TextChoices):
+        ACCESS = "access", _('Access token')
+        REFRESH = "refresh", _('Refresh token')
+
+    key = models.CharField(_("Key"), max_length=1000, primary_key=True)
     user = models.ForeignKey(
         User, related_name='auth_token',
         on_delete=models.CASCADE, verbose_name=_("User")
     )
     created = models.DateTimeField(_("Created"), auto_now_add=True)
+    type = models.CharField(_("Type"), max_length=20, choices=TokenType.choices, default=TokenType.ACCESS)
 
     class Meta:
         # Work around for a bug in Django:
@@ -101,12 +106,15 @@ class Token(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.key:
-            self.key = self.generate_key()
+            self.key = self.generate_key(self.type)
         return super().save(*args, **kwargs)
 
     @classmethod
-    def generate_key(cls):
-        return binascii.hexlify(os.urandom(20)).decode()
+    def generate_key(cls, type):
+        token_length = settings.ACCESS_TOKEN_LENGTH
+        if type == Token.TokenType.REFRESH:
+            token_length = settings.REFRESH_TOKEN_LENGTH
+        return binascii.hexlify(os.urandom(token_length)).decode()
 
     def __str__(self):
         return self.key
