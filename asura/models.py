@@ -16,7 +16,7 @@ class User(models.Model):
     """
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50, null=True, blank=True)
     email = models.CharField(max_length=64, unique=True)
     username = models.CharField(max_length=25, unique=True)
     password = models.CharField(max_length=256)
