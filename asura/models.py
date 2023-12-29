@@ -56,7 +56,7 @@ class UserConversation(models.Model):
     """
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     user = models.ForeignKey(to=User, on_delete=models.SET_NULL, null=True)
-    conversation = models.ForeignKey(to=Conversation, on_delete=models.SET_NULL, null=True, related_name='users')
+    conversation = models.ForeignKey(to=Conversation, on_delete=models.SET_NULL, null=True, related_name='user_conversations')
 
 
 class Message(models.Model):
@@ -69,10 +69,10 @@ class Message(models.Model):
         GIF = "gif", _('Gif')
 
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
-    conversation = models.ForeignKey(to=Conversation, on_delete=models.SET_NULL, null=True)
+    conversation = models.ForeignKey(to=Conversation, on_delete=models.SET_NULL, null=True, related_name='conversation_messages')
     user = models.ForeignKey(to=User, on_delete=models.SET_NULL, null=True, default=None)
     content = models.JSONField(default=dict, null=True)
-    type = models.TextField(max_length=50, choices=MessageType.choices, default=MessageType.TEXT)
+    type = models.CharField(max_length=50, choices=MessageType.choices, default=MessageType.TEXT)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     deleted_at = models.DateTimeField(default=None, null=True)
@@ -91,7 +91,7 @@ class Token(models.Model):
         User, related_name='auth_token',
         on_delete=models.CASCADE, verbose_name=_("User")
     )
-    created = models.DateTimeField(_("Created"), auto_now_add=True)
+    created_at = models.DateTimeField(_("Created"), auto_now_add=True)
     type = models.CharField(_("Type"), max_length=20, choices=TokenType.choices, default=TokenType.ACCESS)
 
     class Meta:
@@ -118,3 +118,37 @@ class Token(models.Model):
 
     def __str__(self):
         return self.key
+
+
+class Post(models.Model):
+    """
+    Represents a timeline post
+    """
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    deleted_at = models.DateTimeField(default=None, null=True)
+    content = models.TextField()
+    user = models.ForeignKey(to=User, on_delete=models.SET_NULL, related_name='posts')
+
+    # Denormalized fields
+    likes_count = models.PositiveIntegerField()
+    comments_count = models.PositiveIntegerField()
+
+
+class PostLike(models.Model):
+    """
+    Represents a post like
+    """
+    score = models.PositiveSmallIntegerField(default=1)
+    post = models.ForeignKey(to=Post, on_delete=models.CASCADE, related_name='post_likes')
+    user = models.ForeignKey(to=Post, on_delete=models.SET_NULL, related_name='post_likes')
+
+
+class PostMedia(models.Model):
+    """
+    Represents a media file attached to a Post
+    """
+    file = models.FileField(upload_to='posts/')
+    post = models.ForeignKey(to=Post, on_delete=models.SET_NULL, related_name='media_files')
+

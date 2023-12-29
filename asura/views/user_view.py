@@ -62,11 +62,11 @@ class UserSignIn(mixins.ListModelMixin, generics.GenericAPIView):
 class UserSearch(APIView):
     """
     API endpoint for searching users
+    Token is not required but optional
     Response example:
     - 200: 
     """
     authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
 
     MIN_KEYWORD_LENGTH = 3
 
