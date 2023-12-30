@@ -20,8 +20,8 @@ class TokenAuthentication(authentication.BasicAuthentication):
         """
         # read authentication header
         authorization = request.headers.get('Authorization')
-        if authorization is not None:
-            # Split in 2 to avoid [ValueError: too many values to unpack]
+        if authorization is not None and len(authorization.split()) > 1:
+            # Split in 2
             _, key = authorization.split(' ', 1)
             token = token_services.find_by_key(key, type=Token.TokenType.ACCESS)
 

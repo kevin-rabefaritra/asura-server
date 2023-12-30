@@ -5,6 +5,7 @@ from asura.models import User
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     """
+    https://www.django-rest-framework.org/api-guide/serializers/#hyperlinkedmodelserializer
     Represents a serializer for User
     """
     password = serializers.CharField(write_only=True)

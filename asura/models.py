@@ -129,26 +129,34 @@ class Post(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     deleted_at = models.DateTimeField(default=None, null=True)
     content = models.TextField()
-    user = models.ForeignKey(to=User, on_delete=models.SET_NULL, related_name='posts')
+    user = models.ForeignKey(to=User, on_delete=models.SET_NULL, related_name='user_posts', null=True)
 
     # Denormalized fields
-    likes_count = models.PositiveIntegerField()
-    comments_count = models.PositiveIntegerField()
+    likes_count = models.PositiveIntegerField(default=0)
+    comments_count = models.PositiveIntegerField(default=0)
 
 
-class PostLike(models.Model):
+class PostReaction(models.Model):
     """
     Represents a post like
     """
-    score = models.PositiveSmallIntegerField(default=1)
-    post = models.ForeignKey(to=Post, on_delete=models.CASCADE, related_name='post_likes')
-    user = models.ForeignKey(to=Post, on_delete=models.SET_NULL, related_name='post_likes')
+    score = models.SmallIntegerField(default=1) # will allow -1 in the future
+    post = models.ForeignKey(to=Post, on_delete=models.CASCADE, related_name='post_reactions')
+    user = models.ForeignKey(to=Post, on_delete=models.SET_NULL, related_name='user_post_reactions', null=True)
 
 
 class PostMedia(models.Model):
     """
     Represents a media file attached to a Post
     """
-    file = models.FileField(upload_to='posts/')
-    post = models.ForeignKey(to=Post, on_delete=models.SET_NULL, related_name='media_files')
+
+    def user_directory_path(instance, filename):
+        """
+        Define a custom file path with the user UUID
+        """
+        return 'posts/%s/%Y/%m/%s' % (instance.post.user.uuid, filename) 
+
+    file = models.FileField(upload_to=user_directory_path)
+    post = models.ForeignKey(to=Post, on_delete=models.SET_NULL, related_name='media_files', null=True)
+    deleted_at = models.DateTimeField(default=None, null=True)
 

@@ -9,6 +9,7 @@ from asura.views.token_view import TokenIdentification, TokenRenewal
 from asura.views.user_view import UserList, UserSignIn, UserSearch, \
     UserBasicInfo, \
     UserUpdatePassword
+from asura.views.post_view import PostList, PostCreate
 
 urlpatterns = [
     path('hello/', user_view.hello),
@@ -28,6 +29,10 @@ urlpatterns = [
     # Conversation
     path('conversations/', ConversationList.as_view()),
     path('messages/<str:uuid>', MessageList.as_view()),
+
+    # Post
+    path('posts/', PostList.as_view()),
+    path('posts/create', PostCreate.as_view()),
 
     # Token
     path('token/identify/<str:key>', TokenIdentification.as_view()),

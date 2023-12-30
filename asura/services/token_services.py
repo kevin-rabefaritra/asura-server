@@ -16,7 +16,7 @@ def get(user: User, type: str=Token.TokenType.ACCESS, create_if_none=True) -> To
     token_lifespan = get_token_lifespan(type)
     min_created_at = now - datetime.timedelta(seconds=token_lifespan)
 
-    token = Token.objects.filter(user=user, type=type, created__gt=min_created_at).first()
+    token = Token.objects.filter(user=user, type=type, created_at__gt=min_created_at).first()
     if token is None and create_if_none:
         token = generate(user, type, invalidate_existing=False)
     return token
@@ -41,7 +41,7 @@ def has_expired(token: Token) -> bool:
     now = date_time_helper.now()
     expiration_duration = get_token_lifespan(token.type)
     min_datetime = now - datetime.timedelta(seconds=expiration_duration)
-    return token.created <= min_datetime
+    return token.created_at <= min_datetime
 
 
 def get_token_lifespan(type: str) -> int:

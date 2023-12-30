@@ -32,5 +32,5 @@ class ConversationList(mixins.ListModelMixin, generics.GenericAPIView):
 
         # we get the token owner (we search using the ID to avoid additional table JOIN with UUID).
         user = self.request.user
-        queryset = queryset.filter(users__user=user.id)
+        queryset = queryset.filter(user_conversations__user=user.id)
         return queryset
