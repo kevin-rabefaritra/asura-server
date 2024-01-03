@@ -29,6 +29,7 @@ class TokenAuthentication(authentication.BasicAuthentication):
                 # Second None argument is required by parent class' method
                 return (token.user, None)
             else:
-                raise AuthenticationFailed('Provided auth. is not valid.')
+                return None
+                # raise AuthenticationFailed('Provided auth. is not valid.')
         else:
             return None
