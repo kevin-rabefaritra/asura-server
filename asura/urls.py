@@ -6,10 +6,11 @@ from asura.views import user_view
 from asura.views.conversation_view import ConversationList
 from asura.views.message_view import MessageSend, MessageList
 from asura.views.token_view import TokenIdentification, TokenRenewal
-from asura.views.user_view import UserList, UserSignIn, UserSearch, \
+from asura.views.user_view import UserList, UserSignIn, \
     UserBasicInfo, \
     UserUpdatePassword
 from asura.views.post_view import PostList, PostCreate
+from asura.views.search_view import ContentSearch
 
 urlpatterns = [
     path('hello/', user_view.hello),
@@ -17,7 +18,7 @@ urlpatterns = [
     # Users
     path('users/', UserList.as_view()),
     path('users/signin', UserSignIn.as_view()),
-    path('users/search/<str:keyword>', UserSearch.as_view()),
+    path('users/search/<str:keyword>', ContentSearch.as_view()),
 
     path('users/profile/basic', UserBasicInfo.as_view()),
     path('users/profile/basic/<str:uuid>', UserBasicInfo.as_view()),

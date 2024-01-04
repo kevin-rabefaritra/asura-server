@@ -30,6 +30,12 @@ def find_by_username_password(username: str, password: str) -> User or None:
     else:
         return None
 
+def find_by_keyword(keyword: str) -> list:
+    """
+    Find all users with the provided keyword
+    """
+    return User.objects.filter(username__icontains=keyword)
+
 
 def update_password(username: str, old_password: str, new_password) -> bool:
     """
