@@ -13,12 +13,14 @@ from asura.views.post_view import PostList, PostCreate
 from asura.views.search_view import ContentSearch
 
 urlpatterns = [
+
+    # General
     path('hello/', user_view.hello),
+    path('search/<str:keyword>', ContentSearch.as_view()),
 
     # Users
     path('users/', UserList.as_view()),
     path('users/signin', UserSignIn.as_view()),
-    path('users/search/<str:keyword>', ContentSearch.as_view()),
 
     path('users/profile/basic', UserBasicInfo.as_view()),
     path('users/profile/basic/<str:uuid>', UserBasicInfo.as_view()),

@@ -12,4 +12,4 @@ def find_by_keyword(keyword: str) -> list:
     """
     Find all posts with the provided keyword
     """
-    return Post.objects.filter(username__icontains=keyword)
+    return Post.objects.filter(content__icontains=keyword)

@@ -130,6 +130,7 @@ class Post(models.Model):
     deleted_at = models.DateTimeField(default=None, null=True)
     content = models.TextField()
     user = models.ForeignKey(to=User, on_delete=models.SET_NULL, related_name='user_posts', null=True)
+    tags = models.CharField(max_length=512, default=None, null=True)
 
     # Denormalized fields
     likes_count = models.PositiveIntegerField(default=0)
@@ -158,5 +159,6 @@ class PostMedia(models.Model):
 
     file = models.FileField(upload_to=user_directory_path)
     post = models.ForeignKey(to=Post, on_delete=models.SET_NULL, related_name='media_files', null=True)
+    alt = models.CharField(max_length=512, default=None, null=True) # alt text (used for search)
     deleted_at = models.DateTimeField(default=None, null=True)
 
