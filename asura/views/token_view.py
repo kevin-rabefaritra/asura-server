@@ -63,7 +63,10 @@ class TokenRenewal(APIView):
         # Extract access and refresh token
         _, key = authorization.split()
         access_token = token_services.find_by_key(key, type=Token.TokenType.ACCESS)
-        refresh_token = token_services.find_by_key(refresh_token, type=Token.TokenType.REFRESH)
+        refresh_token = token_services.find_by_key(
+            refresh_token,
+            type=Token.TokenType.REFRESH
+        )
 
         # Check that both tokens exist AND belong to the same user
         if access_token is not None and refresh_token is not None:

@@ -6,7 +6,8 @@ from rest_framework.response import Response
 from asura.services import user_services, post_services
 from django.core.paginator import Paginator
 
-from asura.serializers.users_serializer import UserSerializer, UserBatchSerializer
+from asura.serializers.users_serializer import UserSerializer, \
+    UserBatchSerializer
 from asura.serializers.post_serializer import PostSerializer
 
 class ContentSearch(APIView):
@@ -33,7 +34,8 @@ class ContentSearch(APIView):
 
             users = user_services.find_by_keyword(keyword)[:self.MAX_RESULTS]
             posts = post_services.find_by_keyword(keyword)[:self.MAX_RESULTS]
-            objects = UserBatchSerializer(users, many=True).data + PostSerializer(posts, many=True).data
+            objects = UserBatchSerializer(users, many=True).data
+            + PostSerializer(posts, many=True).data
 
             # Create a paginator
             paginator = Paginator(objects, self.MAX_RESULTS).page(page)

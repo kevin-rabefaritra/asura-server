@@ -29,7 +29,7 @@ class MessageSend(APIView):
             - content_type: type of the content (refer to MessageType keys)
             - conversation: uuid of the Conversation
              OR
-            - recipient: uuid of the User (if the Conversation has not been created yet)
+            - recipient: uuid of the User (if the Conversation is not created yet)
         :param args:
         :param kwargs:
         :return:
