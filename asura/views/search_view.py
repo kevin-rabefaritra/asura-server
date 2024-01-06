@@ -20,7 +20,7 @@ class ContentSearch(APIView):
     authentication_classes = [TokenAuthentication]
 
     MIN_KEYWORD_LENGTH = 3
-    MAX_RESULTS = 50
+    MAX_RESULTS = 20
 
     def get(self, request, keyword: str):
         keyword = keyword.strip()
@@ -32,17 +32,20 @@ class ContentSearch(APIView):
                 # may want to do something if the user is authenticated
                 pass
 
-            users = user_services.find_by_keyword(keyword)[:self.MAX_RESULTS]
-            posts = post_services.find_by_keyword(keyword)[:self.MAX_RESULTS]
-            objects = UserBatchSerializer(users, many=True).data
-            + PostSerializer(posts, many=True).data
+            users = user_services.find_by_keyword(keyword)
+            posts = post_services.find_by_keyword(keyword)
+            
+            # Merge objects in one list
+            objects = [e for e in UserBatchSerializer(users, many=True).data]
+            objects += [e for e in PostSerializer(posts, many=True).data]
 
             # Create a paginator
             paginator = Paginator(objects, self.MAX_RESULTS).page(page)
             data = {
                 'total': len(paginator.object_list),
                 'results': paginator.object_list,
-                'has_next': paginator.has_next()
+                'next_page': paginator.next_page_number() if paginator.has_next()
+                    else None
             }
         else:
             data = []

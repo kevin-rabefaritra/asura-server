@@ -59,27 +59,6 @@ class UserSignIn(mixins.ListModelMixin, generics.GenericAPIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
 
-class UserSearch(APIView):
-    """
-    API endpoint for searching users
-    Token is not required but optional
-    Response example:
-    - 200: 
-    """
-    authentication_classes = [TokenAuthentication]
-
-    MIN_KEYWORD_LENGTH = 3
-
-    def get(self, request, keyword: str):
-        keyword = keyword.strip()
-        if len(keyword) >= self.MIN_KEYWORD_LENGTH:
-            users = User.objects.filter(username__icontains=keyword)
-            serializer = UserBatchSerializer(users, many=True)
-            return Response(data=serializer.data, status=status.HTTP_200_OK)
-        else:
-            return Response(data=[], status=status.HTTP_200_OK)
-        
-
 class UserUpdatePassword(APIView):
     """
     API endpoint for updating a single user password
