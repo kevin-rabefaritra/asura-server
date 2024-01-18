@@ -36,10 +36,6 @@ def add_reaction(user: User, uuid: str, score: int, update_post: bool=True):
         post__uuid=uuid,
         user__uuid=user.uuid
     ).first()
-
-    if score == post_reaction.score:
-        # There are no changes
-        return
     
     # make sure the score is between [-1;1]
     score = 1 if score > 1 else -1 if score < -1 else score
@@ -53,6 +49,10 @@ def add_reaction(user: User, uuid: str, score: int, update_post: bool=True):
         post_reaction.post = post
         post_reaction.user = user
     else:
+        # check if the given score is the same as the existing one
+        if score == post_reaction.score:
+            return
+
         # We deduct the previous reaction and add the new one
         post.likes_count = post.likes_count - post_reaction.score + score
 
