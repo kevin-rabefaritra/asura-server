@@ -25,9 +25,9 @@ class PostList(mixins.ListModelMixin, generics.GenericAPIView):
 
 
 class PostCreate(APIView):
-    '''
+    """
     Used to publish a Post
-    '''
+    """
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
@@ -46,4 +46,30 @@ class PostCreate(APIView):
 
         except MissingParametersException as e:
             print('[PostCreate] %s' % e)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+class PostReact(APIView):
+    """
+    Used to react to a Post
+    """
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, uuid: str):
+        '''
+        @param request, requires the following value:
+        - score {int} the updated score -1;1;0
+        @param uuid the identifier of the Post
+        '''
+        data = request.data
+        try:
+            if 'score' not in data:
+                raise MissingParametersException(['score'])
+            
+            post_services.add_reaction(request.user, uuid, data['score'])
+            return Response(status=status.HTTP_201_CREATED)
+
+        except MissingParametersException as e:
+            print('[PostReact] %s' % e)
             return Response(status=status.HTTP_400_BAD_REQUEST)
