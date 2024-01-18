@@ -133,17 +133,17 @@ class Post(models.Model):
     tags = models.CharField(max_length=512, default=None, null=True)
 
     # Denormalized fields
-    likes_count = models.PositiveIntegerField(default=0)
-    comments_count = models.PositiveIntegerField(default=0)
+    likes_count = models.IntegerField(default=0)
+    comments_count = models.IntegerField(default=0)
 
 
 class PostReaction(models.Model):
     """
-    Represents a post like
+    Represents a post reaction
     """
-    score = models.SmallIntegerField(default=1) # will allow -1 in the future
+    score = models.SmallIntegerField(default=0) # will allow -1 in the future
     post = models.ForeignKey(to=Post, on_delete=models.CASCADE, related_name='post_reactions')
-    user = models.ForeignKey(to=Post, on_delete=models.SET_NULL, related_name='user_post_reactions', null=True)
+    user = models.ForeignKey(to=User, on_delete=models.SET_NULL, related_name='user_post_reactions', null=True)
 
 
 class PostMedia(models.Model):
