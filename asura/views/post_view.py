@@ -15,13 +15,37 @@ class PostList(mixins.ListModelMixin, generics.GenericAPIView):
     """
     authentication_classes = [TokenAuthentication]
 
-    queryset = Post.objects.all().order_by('-created_at')
     serializer_class = PostSerializer
 
-    # Todo: add pagination
+    # Page size is defined in settings.py
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
+    
+    def get_queryset(self):
+        """
+        Fetch Posts and for each Post, add an additional field "user_score" to
+        represent the score given by the user
+        """
+        posts = Post.objects.all().order_by('-created_at')
+
+        # if the user is Anonymous, we can return the Post list right away
+        if not self.request.user.is_authenticated:
+            pass
+        else:
+            # user is authenticated, we fetch the posts reactions for the
+            # selected posts
+            user_uuid = self.request.user.uuid
+            post_uuids = [_post.uuid for _post in posts]
+            post_reactions = post_services.find_reactions(user_uuid, post_uuids)
+            
+            # bind PostReaction to Post list
+            for post in posts:
+                post_reaction = list(filter(lambda x:x.post.uuid == post.uuid, post_reactions))
+                if post_reaction:
+                    post.user_score = post_reaction[0].score
+
+        return posts
 
 
 class PostCreate(APIView):

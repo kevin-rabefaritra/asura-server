@@ -63,3 +63,13 @@ def add_reaction(user: User, uuid: str, score: int, update_post: bool=True):
         post.save()
     
     post_reaction.save()
+
+
+def find_reactions(user_uuid, post_uuids):
+    if not isinstance(post_uuids, list):
+        post_uuids = [post_uuids]
+
+    return PostReaction.objects.filter(
+        user__uuid=user_uuid,
+        post__uuid__in=post_uuids
+    )

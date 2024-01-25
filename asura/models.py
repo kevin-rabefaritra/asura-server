@@ -136,6 +136,10 @@ class Post(models.Model):
     likes_count = models.IntegerField(default=0)
     comments_count = models.IntegerField(default=0)
 
+    @property
+    def get_user_score(self):
+        return self.user_score if hasattr(self, 'user_score') else 0
+
 
 class PostReaction(models.Model):
     """
