@@ -97,3 +97,15 @@ class PostReact(APIView):
         except MissingParametersException as e:
             print('[PostReact] %s' % e)
             return Response(status=status.HTTP_400_BAD_REQUEST)
+        
+
+class PostShare(APIView):
+    """
+    Used to share a Post
+    """
+    def get(self, request, *args, **kwargs):
+        """
+        Generates a shareable image of a Post
+        """
+        # Todo: implement
+        return Response(status=status.HTTP_418_IM_A_TEAPOT)

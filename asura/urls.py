@@ -9,7 +9,7 @@ from asura.views.token_view import TokenIdentification, TokenRenewal
 from asura.views.user_view import UserList, UserSignIn, \
     UserBasicInfo, \
     UserUpdatePassword
-from asura.views.post_view import PostList, PostCreate, PostReact
+from asura.views.post_view import PostList, PostCreate, PostReact, PostShare
 from asura.views.search_view import ContentSearch
 
 urlpatterns = [
@@ -37,6 +37,7 @@ urlpatterns = [
     path('posts/', PostList.as_view()),
     path('posts/create', PostCreate.as_view()),
     path('posts/react/<str:uuid>', PostReact.as_view()),
+    path('posts/share/<str:uuid>', PostShare.as_view()),
 
     # Token
     path('token/identify/<str:key>', TokenIdentification.as_view()),
