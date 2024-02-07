@@ -5,6 +5,7 @@ from django.http import JsonResponse
 
 from asura.serializers.users_serializer import UserSerializer, UserBatchSerializer
 from asura.exceptions.user_exceptions import UserNotFoundException
+from asura.exceptions.generic_exceptions import MissingParametersException
 from django.core.exceptions import ValidationError
 from rest_framework.response import Response
 from rest_framework import status
@@ -98,9 +99,8 @@ class UserBasicInfo(APIView):
     """
 
     authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request, uuid: str = None):
         """
         GET request to show a user's basic info
         
@@ -108,16 +108,19 @@ class UserBasicInfo(APIView):
         2) if not, we retrieve the user from the token
         """
         try:
-            # default is token user
-            uuid = request.user.uuid
-            if 'uuid' in kwargs:
-                uuid = kwargs['uuid']
+            user = request.user
+            if uuid is None and not user.is_authenticated:
+                raise MissingParametersException(['auuid'])
             
-            user = user_services.find_by_uuid(uuid)
+            _uuid = uuid or request.user.uuid
+            
+            user = user_services.find_by_uuid(_uuid)
             serializer = UserSerializer(user)
             return Response(serializer.data)
+        
         except (UserNotFoundException, ValidationError):
             return Response(status=status.HTTP_404_NOT_FOUND)
+        
         except Exception as e:
             return Response(data={'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
