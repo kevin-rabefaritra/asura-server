@@ -73,3 +73,9 @@ def find_reactions(user_uuid, post_uuids):
         user__uuid=user_uuid,
         post__uuid__in=post_uuids
     )
+
+def find_by_username(username: str) -> list:
+    """
+    Retrieve all posts shared by a user (given their username)
+    """
+    return Post.objects.filter(user__username=username)
