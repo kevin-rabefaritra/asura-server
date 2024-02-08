@@ -110,7 +110,7 @@ class UserBasicInfo(APIView):
         try:
             user = request.user
             if uuid is None and not user.is_authenticated:
-                raise MissingParametersException(['auuid'])
+                raise MissingParametersException('auuid')
             
             _uuid = uuid or request.user.uuid
             

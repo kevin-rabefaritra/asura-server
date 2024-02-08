@@ -159,7 +159,7 @@ class PostMedia(models.Model):
         """
         Define a custom file path with the user UUID
         """
-        return 'posts/%s/%Y/%m/%s' % (instance.post.user.uuid, filename) 
+        return 'posts/%s_%s' % (instance.post.user.uuid, filename) 
 
     file = models.FileField(upload_to=user_directory_path)
     post = models.ForeignKey(to=Post, on_delete=models.SET_NULL, related_name='media_files', null=True)

@@ -14,7 +14,6 @@ class PostList(mixins.ListModelMixin, generics.GenericAPIView):
     API view for retrieving posts
     """
     authentication_classes = [TokenAuthentication]
-
     serializer_class = PostSerializer
 
     # Page size is defined in settings.py
@@ -63,7 +62,7 @@ class PostCreate(APIView):
         data = request.data
         try:
             if 'content' not in data:
-                raise MissingParametersException(['content'])
+                raise MissingParametersException('content')
             
             post_services.save(request.user, data['content'])
             return Response(status=status.HTTP_201_CREATED)
@@ -89,7 +88,7 @@ class PostReact(APIView):
         data = request.data
         try:
             if 'score' not in data:
-                raise MissingParametersException(['score'])
+                raise MissingParametersException('score')
             
             post_services.add_reaction(request.user, uuid, data['score'])
             return Response(status=status.HTTP_201_CREATED)

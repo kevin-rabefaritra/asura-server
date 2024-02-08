@@ -1,4 +1,6 @@
-from asura.models import User, Post, PostReaction
+from asura.exceptions.generic_exceptions import NoneException
+from asura.models import User, Post, PostReaction, PostMedia
+from asura.helpers import media_helper, string_helper
 
 def save(user: User, content: str) -> Post or None:
     """
@@ -66,6 +68,9 @@ def add_reaction(user: User, uuid: str, score: int, update_post: bool=True):
 
 
 def find_reactions(user_uuid, post_uuids):
+    """
+    Retrieves all post reactions of a given User for a list of Posts
+    """
     if not isinstance(post_uuids, list):
         post_uuids = [post_uuids]
 
@@ -79,3 +84,23 @@ def find_by_username(username: str) -> list:
     Retrieve all posts shared by a user (given their username)
     """
     return Post.objects.filter(user__username=username)
+
+
+def add_media(base64_media: str, post_uuid: str, alt_text: str=None) -> PostMedia:
+    """
+    Adds a media file to a post
+    """
+    post = find_by_uuid(post_uuid)
+
+    if not post:
+        raise NoneException('post')
+    
+    filename = string_helper.generate_hex_uuid()
+    content_file = media_helper.base64_to_content_file(base64_media, filename)
+
+    post_media = PostMedia()
+    post_media.post = post
+    post_media.file = content_file
+    post_media.alt = alt_text
+    post_media.save()
+    return post_media

@@ -1,6 +1,8 @@
 from django.urls import path
 from django.urls import include
 from rest_framework import routers
+from django.conf import settings
+from django.conf.urls.static import static
 
 from asura.views import user_view
 from asura.views.conversation_view import ConversationList
@@ -11,6 +13,7 @@ from asura.views.user_view import UserList, UserSignIn, \
     UserUpdatePassword
 from asura.views.post_view import PostList, PostCreate, PostReact, PostShare
 from asura.views.search_view import ContentSearch
+from asura.views.media_view import MediaCreate
 
 urlpatterns = [
 
@@ -39,9 +42,12 @@ urlpatterns = [
     path('posts/react/<str:uuid>', PostReact.as_view()),
     path('posts/share/<str:uuid>', PostShare.as_view()),
 
+    # Media
+    path('media/create/<str:uuid>', MediaCreate.as_view()),
+
     # Token
     path('token/identify/<str:key>', TokenIdentification.as_view()),
     path('token/renew', TokenRenewal.as_view()),
 
     path('api-auth/', include('rest_framework.urls')),
-]
+] + static('media/posts/', document_root='media/posts/')

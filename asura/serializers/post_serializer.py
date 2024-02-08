@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from asura.models import Post
+from asura.serializers.post_media_serializer import PostMediaSerializer
 
 class PostSerializer(serializers.HyperlinkedModelSerializer):
     """
@@ -10,6 +11,7 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
     user_firstname = serializers.CharField(source='user.first_name')
     user_lastname = serializers.CharField(source='user.last_name')
     user_score = serializers.IntegerField(source='get_user_score')
+    media = PostMediaSerializer(source='media_files', many=True) # media _set
 
     class Meta:
         model = Post
@@ -22,5 +24,6 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
             'user_username',
             'user_firstname',
             'user_lastname',
-            'user_score'
+            'user_score',
+            'media'
         ]
