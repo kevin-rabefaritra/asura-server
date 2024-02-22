@@ -18,8 +18,9 @@ from django.urls import include
 
 from django.contrib import admin
 from django.urls import path
+from django.conf.urls.static import static
 
 urlpatterns = [
     path("asura/", include("asura.urls")),
     path('admin/', admin.site.urls),
-]
+] + static('media/posts/', document_root='media/posts/')

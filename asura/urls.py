@@ -2,7 +2,6 @@ from django.urls import path
 from django.urls import include
 from rest_framework import routers
 from django.conf import settings
-from django.conf.urls.static import static
 
 from asura.views import user_view
 from asura.views.conversation_view import ConversationList
@@ -50,4 +49,4 @@ urlpatterns = [
     path('token/renew', TokenRenewal.as_view()),
 
     path('api-auth/', include('rest_framework.urls')),
-] + static('media/posts/', document_root='media/posts/')
+]
