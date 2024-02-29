@@ -1,5 +1,6 @@
 from asura.exceptions.user_exceptions import UserNotFoundException
 from asura.models import User
+from asura.helpers import media_helper
 
 
 def find_by_uuid(uuid: str, raise_exception_if_not_found: bool = True) -> User or None:
@@ -68,5 +69,17 @@ def update_basic_info(uuid: str, bio: str, birthday: str) -> bool:
         user.birthday = birthday
         user.save()
         return True
+    else:
+        raise UserNotFoundException()
+    
+
+def update_photo(media: str, user_uuid: str) -> bool:
+    """
+    Updates the profile picture of a user
+    """
+    user = find_by_uuid(user_uuid)
+    if user is not None:
+        file_content = media_helper.base64_to_file_content(media, user.uuid)
+        # Todo: add a profile picture field for the User model
     else:
         raise UserNotFoundException()

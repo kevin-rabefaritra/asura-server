@@ -96,11 +96,11 @@ def add_media(base64_media: str, post_uuid: str, alt_text: str=None) -> PostMedi
         raise NoneException('post')
     
     filename = string_helper.generate_hex_uuid()
-    content_file = media_helper.base64_to_content_file(base64_media, filename)
+    file_content = media_helper.base64_to_file_content(base64_media, filename)
 
     post_media = PostMedia()
     post_media.post = post
-    post_media.file = content_file
+    post_media.file = file_content
     post_media.alt = alt_text
     post_media.save()
     return post_media

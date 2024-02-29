@@ -9,7 +9,8 @@ from asura.views.message_view import MessageSend, MessageList
 from asura.views.token_view import TokenIdentification, TokenRenewal
 from asura.views.user_view import UserList, UserSignIn, \
     UserBasicInfo, \
-    UserUpdatePassword
+    UserUpdatePassword, \
+    UserUpdatePhoto
 from asura.views.post_view import PostList, PostCreate, PostReact, PostShare
 from asura.views.search_view import ContentSearch
 from asura.views.media_view import MediaCreate
@@ -27,6 +28,7 @@ urlpatterns = [
     path('users/profile/basic', UserBasicInfo.as_view()),
     path('users/profile/basic/<str:uuid>', UserBasicInfo.as_view()),
     path('users/password/update', UserUpdatePassword.as_view()),
+    path('users/profile/photo/update', UserUpdatePhoto.as_view()),
 
     # Message
     path('message/send', MessageSend.as_view()),

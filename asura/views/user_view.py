@@ -146,6 +146,35 @@ class UserBasicInfo(APIView):
             return Response(data={'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
+class UserUpdatePhoto(APIView):
+    """
+    API for updating a user profile picture (POST only)
+    """
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        """
+        The request body must have the following structure.
+        {
+            "media": "data:<data type>;base64,<data>"
+        }
+        """
+        data = request.data
+        user_uuid = request.user.uuid
+        try:
+            if 'media' not in data:
+                raise MissingParametersException('media')
+            
+            user_services.update_photo(data['media'], user_uuid)
+            return Response(status=status.HTTP_201_CREATED)
+        
+        except MissingParametersException:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        except UserNotFoundException:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
 def hello(request):
     """
     Returns hello

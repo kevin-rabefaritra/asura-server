@@ -2,13 +2,14 @@ import base64
 from django.core.files.base import ContentFile
 import re
 
-def base64_to_content_file(input: str, filename: str) -> ContentFile:
+def base64_to_file_content(input: str, filename: str) -> ContentFile:
     """
     Converts a base64 image to a ContentFile
     Only accepts png / jpeg files
 
     @param base64 the base64 representation of the image
-    @param filename the filename of the ContentFile (without extension)
+    @param filename the filename of the ContentFile WITHOUT extension
+    The extension will be based on the input str
     """
     if not is_base64_valid(input):
         raise ValueError('Input base64 is not supported. input=%s' % input)
