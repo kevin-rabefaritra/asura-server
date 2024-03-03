@@ -115,7 +115,10 @@ class UserBasicInfo(APIView):
             _uuid = uuid or request.user.uuid
             
             user = user_services.find_by_uuid(_uuid)
-            serializer = UserSerializer(user)
+
+            # When passing the request to a serializer, absolute URLs are built
+            # https://stackoverflow.com/a/65139515
+            serializer = UserSerializer(user, context={'request': request})
             return Response(serializer.data)
         
         except (UserNotFoundException, ValidationError):
@@ -168,6 +171,9 @@ class UserUpdatePhoto(APIView):
             
             user_services.update_photo(data['media'], user_uuid)
             return Response(status=status.HTTP_201_CREATED)
+        
+        except ValueError:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
         
         except MissingParametersException:
             return Response(status=status.HTTP_400_BAD_REQUEST)

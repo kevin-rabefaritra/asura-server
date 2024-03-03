@@ -13,7 +13,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
         fields = ['uuid', 'first_name', 'last_name', 'username', 'email',
-                  'password', 'bio', 'birthday', 'created_at']
+                  'password', 'bio', 'birthday', 'profile_picture', 'created_at']
 
 
 class UserBatchSerializer(serializers.HyperlinkedModelSerializer):
@@ -23,4 +23,5 @@ class UserBatchSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = User
-        fields = ['uuid', 'first_name', 'last_name', 'username', 'bio']
+        fields = ['uuid', 'first_name', 'last_name', 'username', 'bio',
+                  'profile_picture']

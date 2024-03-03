@@ -24,3 +24,4 @@ urlpatterns = [
     path("asura/", include("asura.urls")),
     path('admin/', admin.site.urls),
 ] + static('media/posts/', document_root='media/posts/')
+urlpatterns += static('media/users/', document_root='media/users/')

@@ -14,6 +14,9 @@ class User(models.Model):
     """
     Represents a messaging user
     """
+    def profile_picture_upload_path(instance, filename):
+        return 'users/%s_%s' % (instance.uuid, filename)
+
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50, null=True, blank=True)
@@ -21,6 +24,7 @@ class User(models.Model):
     username = models.CharField(max_length=25, unique=True)
     password = models.CharField(max_length=256)
     bio = models.CharField(max_length=1024, null=True, default=None)
+    profile_picture = models.FileField(upload_to=profile_picture_upload_path, null=True, default=None)
     birthday = models.DateField(null=True, default=None)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

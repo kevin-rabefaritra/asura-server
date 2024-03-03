@@ -1,5 +1,6 @@
 from django.utils import timezone
 from datetime import date
+import time
 
 def now():
     """
@@ -20,8 +21,16 @@ def to_date(date_str: str) -> date or None:
     except Exception as e:
         return None
 
+
 def date_to_string(value) -> str:
     """
     Converts a date to a ISO format string
     """
     return value.strftime("%Y/%m/%d")
+
+
+def current_timestamp_ns() -> str:
+    """
+    Returns the current timestamp as string
+    """
+    return str(time.time_ns())
