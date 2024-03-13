@@ -1,15 +1,13 @@
 from rest_framework import serializers
 from asura.models import Post
 from asura.serializers.post_media_serializer import PostMediaSerializer
+from asura.serializers.users_serializer import UserSummarySerializer
 
 class PostSerializer(serializers.HyperlinkedModelSerializer):
     """
     Represents a Post model serializer
     """
-    user_uuid = serializers.CharField(source='user.uuid')
-    user_username = serializers.CharField(source='user.username')
-    user_firstname = serializers.CharField(source='user.first_name')
-    user_lastname = serializers.CharField(source='user.last_name')
+    user = UserSummarySerializer()
     user_score = serializers.IntegerField(source='get_user_score')
     media = PostMediaSerializer(source='media_files', many=True) # media _set
 
@@ -20,10 +18,7 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
             'created_at',
             'content',
             'likes_count',
-            'user_uuid',
-            'user_username',
-            'user_firstname',
-            'user_lastname',
+            'user',
             'user_score',
             'media'
         ]

@@ -49,7 +49,7 @@ class UserSignIn(mixins.ListModelMixin, generics.GenericAPIView):
         if user is not None:
             access_token = token_services.get(user, type=Token.TokenType.ACCESS, create_if_none=True)
             refresh_token = token_services.get(user, type=Token.TokenType.REFRESH, create_if_none=True)
-            serializer = UserSerializer(user)
+            serializer = UserSerializer(user, context={'request': request})
             response = {
                 'user': serializer.data,
                 'token': access_token.key,
