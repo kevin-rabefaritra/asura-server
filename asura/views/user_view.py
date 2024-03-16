@@ -97,7 +97,6 @@ class UserBasicInfo(APIView):
     GET - Shows a user's basic info
     POST - Updates a user's basic info (bio, birthday)
     """
-
     authentication_classes = [TokenAuthentication]
 
     def get(self, request, uuid: str = None):
@@ -110,7 +109,9 @@ class UserBasicInfo(APIView):
         try:
             user = request.user
             if uuid is None and not user.is_authenticated:
-                raise MissingParametersException('auuid')
+                # UUID is not provided and user is not authenticated
+                # The user session may have expired
+                return Response(status=status.HTTP_401_UNAUTHORIZED)
             
             _uuid = uuid or request.user.uuid
             
