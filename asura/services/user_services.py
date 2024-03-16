@@ -87,3 +87,16 @@ def update_photo(media: str, user_uuid: str) -> bool:
         return True
     else:
         raise UserNotFoundException()
+
+
+def remove_photo(user_uuid: str) -> bool:
+    """
+    Removes the profile picture of a user
+    """
+    user = find_by_uuid(user_uuid)
+    if user is not None:
+        user.profile_picture = None
+        user.save()
+        return True
+    else:
+        raise UserNotFoundException()

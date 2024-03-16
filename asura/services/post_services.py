@@ -86,9 +86,9 @@ def find_by_username(username: str) -> list:
     return Post.objects.filter(user__username=username)
 
 
-def add_media(base64_media: str, post_uuid: str, alt_text: str=None) -> PostMedia:
+def add_media(base64_media: list, post_uuid: str, alt_text: str=None) -> PostMedia:
     """
-    Adds a media file to a post
+    Adds a Media file to a post
     """
     post = find_by_uuid(post_uuid)
 
@@ -104,3 +104,13 @@ def add_media(base64_media: str, post_uuid: str, alt_text: str=None) -> PostMedi
     post_media.alt = alt_text
     post_media.save()
     return post_media
+
+
+def add_media_list(media_list: list, post_uuid: str) -> bool:
+    """
+    Add multiple Media to a Post
+    """
+    for media in media_list:
+        # Alt text will be updated later on
+        add_media(media, post_uuid, alt_text=None)
+    return True

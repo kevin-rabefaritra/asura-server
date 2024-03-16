@@ -169,7 +169,10 @@ class UserUpdatePhoto(APIView):
             if 'media' not in data:
                 raise MissingParametersException('media')
             
-            user_services.update_photo(data['media'], user_uuid)
+            if data['media'] is None:
+                user_services.remove_photo(user_uuid)
+            else:            
+                user_services.update_photo(data['media'], user_uuid)
             return Response(status=status.HTTP_201_CREATED)
         
         except ValueError:

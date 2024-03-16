@@ -11,7 +11,7 @@ from asura.services import post_services
 
 class MediaCreate(APIView):
     """
-    Used to create media
+    Used to create a Media file and attach it to a Post
     """
 
     authentication_classes = [TokenAuthentication]
@@ -41,7 +41,7 @@ class MediaCreate(APIView):
                 # user token being invalid or expired
                 raise ValueError("Post does not belong to the user")
             
-            post_services.add_media(data['media'], post.uuid)
+            post_services.add_media_list(data['media'], post.uuid)
 
             return Response(status=status.HTTP_201_CREATED)
         
