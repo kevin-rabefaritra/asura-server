@@ -25,8 +25,16 @@ class PostList(mixins.ListModelMixin, generics.GenericAPIView):
         """
         Fetch Posts and for each Post, add an additional field "user_score" to
         represent the score given by the user
+        Optionnal GET parameters:
+        - username: the username of a user
         """
-        posts = Post.objects.all().order_by('-created_at')
+        posts = Post.objects.all()
+
+        # If the username is provided, we only return Posts of a specific user
+        if self.request.GET.get('username'):
+            posts = post_services.find_by_username(self.request.GET.get('username'))
+
+        posts = posts.order_by('-created_at')
 
         # if the user is Anonymous, we can return the Post list right away
         if not self.request.user.is_authenticated:
