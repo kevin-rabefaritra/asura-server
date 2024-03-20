@@ -59,7 +59,7 @@ class ContentSearch(APIView):
                 posts = post_services.find_by_keyword(keyword)
             
             # Merge objects in one list
-            objects = [e for e in UserBatchSerializer(users, many=True, content={'request': request}).data]
+            objects = [e for e in UserBatchSerializer(users, many=True, context={'request': request}).data]
             objects += [e for e in PostSerializer(posts, many=True).data]
 
             # Create a paginator
