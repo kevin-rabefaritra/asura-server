@@ -99,23 +99,23 @@ class UserBasicInfo(APIView):
     """
     authentication_classes = [TokenAuthentication]
 
-    def get(self, request, uuid: str = None):
+    def get(self, request, username: str = None):
         """
         GET request to show a user's basic info
         
-        1) if :uuid parameter is provided, we fetch the user's basic info
+        1) if :username parameter is provided, we fetch the user's basic info
         2) if not, we retrieve the user from the token
         """
         try:
             user = request.user
-            if uuid is None and not user.is_authenticated:
+            if username is None and not user.is_authenticated:
                 # UUID is not provided and user is not authenticated
                 # The user session may have expired
                 return Response(status=status.HTTP_401_UNAUTHORIZED)
             
-            _uuid = uuid or request.user.uuid
+            _username = username or request.user.username
             
-            user = user_services.find_by_uuid(_uuid)
+            user = user_services.find_by_username(_username)
 
             # When passing the request to a serializer, absolute URLs are built
             # https://stackoverflow.com/a/65139515

@@ -18,6 +18,16 @@ def find_by_uuid(uuid: str, raise_exception_if_not_found: bool = True) -> User o
         raise UserNotFoundException('User UUID %s not found' % uuid)
     else:
         return result
+    
+def find_by_username(username: str, raise_exception_if_not_found: bool = True) -> User or None:
+    """
+    Returns a User based on their username
+    """
+    result = User.objects.filter(username=username).first()
+    if result is None and raise_exception_if_not_found:
+        raise UserNotFoundException('User USERNAME %s not found' % username)
+    else:
+        return result
 
 
 def find_by_username_password(username: str, password: str) -> User or None:

@@ -60,7 +60,7 @@ class ContentSearch(APIView):
             
             # Merge objects in one list
             objects = [e for e in UserBatchSerializer(users, many=True, context={'request': request}).data]
-            objects += [e for e in PostSerializer(posts, many=True).data]
+            objects += [e for e in PostSerializer(posts, many=True, context={'request': request}).data]
 
             # Create a paginator
             paginator = Paginator(objects, self.MAX_RESULTS).page(page)
