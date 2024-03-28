@@ -3,11 +3,13 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
+from django.http import HttpResponse
+
 from asura.auth import TokenAuthentication
 from asura.models import Post
 from asura.serializers.post_serializer import PostSerializer
 from asura.exceptions.generic_exceptions import MissingParametersException
-from asura.services import post_services
+from asura.services import paint_services, post_services
 
 class PostList(mixins.ListModelMixin, generics.GenericAPIView):
     """
@@ -110,9 +112,17 @@ class PostShare(APIView):
     """
     Used to share a Post
     """
-    def get(self, request, *args, **kwargs):
+    def get(self, request, uuid: str):
         """
         Generates a shareable image of a Post
         """
-        # Todo: implement
-        return Response(status=status.HTTP_418_IM_A_TEAPOT)
+        post = post_services.find_by_uuid(uuid)
+
+        if post is None:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        
+        response = HttpResponse(content_type='image/png')
+        post_content = paint_services.draw_post(post)
+        post_content.save(response, 'png')
+        return response
+
